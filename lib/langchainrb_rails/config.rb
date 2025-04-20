@@ -8,7 +8,7 @@ module LangchainrbRails
     #     LangchainrbRails.configure do |config|
     #       config.vectorsearch = ...
     #     end
-    attr_accessor :vectorsearch
+    attr_accessor :vectorsearch, :ar_assistant_class
 
     def initialize
       # Define the defaults for future configuration here

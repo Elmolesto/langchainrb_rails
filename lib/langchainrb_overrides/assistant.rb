@@ -10,7 +10,6 @@ module Langchain
 
     def initialize(id: nil, **kwargs) # rubocop:disable Style/ArgumentsForwarding
       @id = id
-      @ar_assistant_class = LangchainrbRails.config.ar_assistant_class.constantize
       original_initialize(**kwargs)  # rubocop:disable Style/ArgumentsForwarding
     end
 
@@ -19,7 +18,7 @@ module Langchain
         ar_assistant = if id
           self.class.find_assistant(id)
         else
-          @ar_assistant_class.new
+          LangchainrbRails.config.ar_assistant_class.constantize.new
         end
 
         ar_assistant.update!(
@@ -46,7 +45,7 @@ module Langchain
 
     class << self
       def find_assistant(id)
-        @ar_assistant_class.find(id)
+        LangchainrbRails.config.ar_assistant_class.constantize.find(id)
       end
 
       def load(id)
