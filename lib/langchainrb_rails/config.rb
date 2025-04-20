@@ -13,6 +13,7 @@ module LangchainrbRails
     def initialize
       # Define the defaults for future configuration here
       @vectorsearch = {}
+      @ar_assistant_class = "::Assistant"
     end
   end
 end
