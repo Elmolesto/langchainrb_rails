@@ -6,20 +6,20 @@ module Langchain
   class Assistant
     attr_accessor :id
 
-    alias_method :original_initialize, :initialize
+    alias original_initialize initialize
 
-    def initialize(id: nil, **kwargs) # rubocop:disable Style/ArgumentsForwarding
+    def initialize(id: nil, **kwargs)
       @id = id
-      original_initialize(**kwargs)  # rubocop:disable Style/ArgumentsForwarding
+      original_initialize(**kwargs)
     end
 
     def save
       ::ActiveRecord::Base.transaction do
         ar_assistant = if id
-          self.class.find_assistant(id)
-        else
-          LangchainrbRails.config.ar_assistant_class.constantize.new
-        end
+                         self.class.find_assistant(id)
+                       else
+                         LangchainrbRails.config.ar_assistant_class.constantize.new
+                       end
 
         ar_assistant.update!(
           instructions: instructions,
@@ -37,6 +37,9 @@ module Langchain
           )
           message.id = ar_message.id
         end
+
+        # keep only last system message
+        ar_assistant.messages.where(role: "system").order(created_at: :desc).offset(1).destroy_all
 
         @id = ar_assistant.id
         true
