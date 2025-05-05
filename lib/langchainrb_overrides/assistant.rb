@@ -38,9 +38,18 @@ module Langchain
           message.id = ar_message.id
         end
 
+        system_messages = ar_assistant.messages.where(role: "system")
+
         # keep only last system message
-        if ar_assistant.messages.where(role: "system").count > 1
-          ar_assistant.messages.where(role: "system").order(created_at: :desc).offset(1).destroy_all
+        if system_messages.count > 1
+          # get first system message created_at
+          created_at = system_messages.order(created_at: :asc).first.created_at
+
+          # delete all system messages except the last one
+          system_messages.order(created_at: :desc).offset(1).destroy_all
+
+          # update system message created_at to the first system message created_at
+          system_messages.reload.first.update!(created_at: created_at)
         end
 
         @id = ar_assistant.id
