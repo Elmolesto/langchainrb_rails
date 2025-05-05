@@ -39,7 +39,9 @@ module Langchain
         end
 
         # keep only last system message
-        ar_assistant.messages.where(role: "system").order(created_at: :desc).offset(1).destroy_all
+        if ar_assistant.messages.where(role: "system").count > 1
+          ar_assistant.messages.where(role: "system").order(created_at: :desc).offset(1).destroy_all
+        end
 
         @id = ar_assistant.id
         true
