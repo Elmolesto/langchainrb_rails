@@ -8,9 +8,9 @@ module Langchain
 
     alias original_initialize initialize
 
-    def initialize(id: nil, **kwargs)
+    def initialize(id: nil, **kwargs, &block)
       @id = id
-      original_initialize(**kwargs)
+      original_initialize(**kwargs, &block)
     end
 
     def save
